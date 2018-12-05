@@ -21,7 +21,7 @@ server.get('/api/posts', (req, res) => {
         });
 })
 
-server.get('/api/posts/:id', (req, res) => {
+server.get('posts/:id', (req, res) => {
 
     const { id } = req.params;
     db.findById(id)
@@ -43,13 +43,19 @@ server.get('/api/posts/:id', (req, res) => {
 const posts = [];
 
 server.post('/api/posts', (req, res) => {
-    const posts = req.body.posts; 
-    if (!posts) {
-        res
-        .status()
-        .json({ error: "Must provide post" });
-        return;
-    }
+    const user = req.body
+    console.log('user', user);
+    db.insert(user)
+        .then(user => {
+            console.log('user from insert method', user);
+            res.json(users);
+            }
+        )
+        .catch(err => {
+            res
+                .status(500)
+            .json({message: "failed to insert user"})
+        })
 
     posts.push(posts);
     res.json(
@@ -61,8 +67,10 @@ server.post('/api/posts', (req, res) => {
 server.put('/api/posts', (req, res) => {
     res.status(200).json({ url: '/posts', operation: 'PUT' });
 });
- 
 
+
+ 
+//LISTENING
 server.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`)
-})
+    console.log(`Server is listening on  port ${PORT}`)
+});
